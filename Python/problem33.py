@@ -1,7 +1,5 @@
 __author__ = 'linoor'
 
-__author__ = 'linoor'
-
 import unittest
 from fractions import Fraction
 from operator import mul
@@ -33,7 +31,7 @@ def is_curious_fraction(numerator, denominator):
     new_num = remove_digits(numerator, common_digs)
     new_denom = remove_digits(denominator, common_digs)
 
-    if not new_num or not new_denom:
+    if not (new_num and new_denom):
         return False
 
     # reduced by Fraction class, guaranteed to be well reduced
