@@ -1,43 +1,62 @@
 import math
 import unittest
-from collections import namedtuple
 
 class Solution():
+
     def __init__(self, a, b, c):
         self.a = a
         self.b = b
-        self.c =
+        self.c = c
+
+    def __hash__(self):
+        return hash((self.a, self.b, self.c))
+
+    def __repr__(self):
+        return r'{{{0}, {1}, {2}}}'.format(self.a, self.b, self.c)
 
     def __eq__(self, other):
         items1 = [self.a, self.b, self.c]
         items2 = [other.a, other.b, other.c]
-        return all([i in items2 for ic in items1]) and all([i in items1 for i in items2])
 
-    def __hash__(self):
-        return hash()
-
-# Solution = namedtuple('Solution', 'a b c')
+        return all([i in items1 for i in items2]) and all([i in items2 for i in items1])
 
 def solutions(perimeter):
     sols = []
     p = perimeter
-    for b in range(1, p/2):
-        a = (2*p*b - p*p) / (2*b - 2*p)
+    for b in range(1, round(p/2)):
+        a = int((2*p*b - p*p) / (2*b - 2*p))
         c = int(math.sqrt(a*a + b*b))
         solution = Solution(a, b, c)
-        if sum([solution.a, solution.b, solution.c]) == p:
+        if solution.a + solution.b + solution.c == p:
             sols.append(solution)
-    return list(set(sols))
+    seen = []
+    for s in sols:
+        if s not in seen:
+            seen.append(s)
+    return seen
 
-def checkEqual(l1, l2):
-    return len(l1) == len(l2) and sorted(l1) == sorted(l2)
+def number_of_sols(sols):
+    return len(sols)
 
 class SolutionsTests(unittest.TestCase):
 
 
+    def test_equality(self):
+        self.assertTrue(Solution(1,2,3) == Solution(3,2,1))
+
     def test_solution(self):
-        print(solutions(120))
-        self.assertTrue(checkEqual([Solution(20, 48, 52), Solution(24, 45, 51), (30, 40, 50)], solutions(120)))
+        self.assertEqual([Solution(20, 48, 52), Solution(24, 45, 51), Solution(30, 40, 50)], solutions(120))
+
+    def test_number_of_solutions(self):
+        self.assertEqual(number_of_sols(solutions(120)), 3)
 
 if __name__ == "__main__":
-    unittest.main()
+    # unittest.main()
+    max, p = 0, 0
+    for i in range(1, 1000):
+        number = number_of_sols(solutions(i))
+        if number > max:
+            max = number
+            p = i
+    print(max, p)
+    print(solutions(840))
